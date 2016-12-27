@@ -1,0 +1,15 @@
+theme: yefeme
+title: Yefim Vedernikoff
+email: hi@yef.im
+description: >
+  The personal site of Yefim Vedernikoff
+baseurl: ""
+url: "https://yef.im"
+twitter_username: yefim
+github_username:  yefim
+
+# Build settings
+markdown: kramdown
+exclude:
+  - Gemfile
+  - Gemfile.lock
