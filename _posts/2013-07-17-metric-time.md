@@ -3,8 +3,6 @@ layout: post
 title: Metric Time
 ---
 
-## The Idea
-
 The metric system is perfectly regimented. Base 10 is such a simple conversion factor. 1 kilometer is 1000 meters, 1 liter is 1000 milliliters, and so on.
 
 A friend and I decided to implement the same schema for time.
