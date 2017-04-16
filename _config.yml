@@ -10,6 +10,8 @@ twitter_username: yefim
 github_username:  yefim
 
 # Build settings
+gems:
+  - octopress-autoprefixer
 markdown: kramdown
 exclude:
   - Gemfile
