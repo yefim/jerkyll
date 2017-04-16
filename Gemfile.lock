@@ -42,7 +42,7 @@ GEM
     rouge (1.11.1)
     safe_yaml (1.0.4)
     sass (3.4.23)
-    yefeme (0.3.7)
+    yefeme (0.3.8)
       jekyll (~> 3.3)
 
 PLATFORMS
