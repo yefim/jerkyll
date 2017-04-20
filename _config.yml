@@ -12,6 +12,7 @@ github_username:  yefim
 # Build settings
 gems:
   - octopress-autoprefixer
+  - jekyll-sitemap
 markdown: kramdown
 exclude:
   - Gemfile

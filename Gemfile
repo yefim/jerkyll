@@ -5,3 +5,4 @@ gem "jekyll", "3.4"
 
 gem "yefeme"
 gem "octopress-autoprefixer"
+gem "jekyll-sitemap"
