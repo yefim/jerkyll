@@ -6,8 +6,8 @@ description: >
   This is the place where I gather my scrambled thoughts into words.
 baseurl: ""
 url: "https://yef.im"
-twitter_username: yefim
-github_username:  yefim
+twitter: yefim
+github:  yefim
 
 # Build settings
 gems:
