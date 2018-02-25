@@ -9,7 +9,7 @@ twitter: yefim
 github:  yefim
 
 # Build settings
-gems:
+plugins:
   - octopress-autoprefixer
   - jekyll-sitemap
 markdown: kramdown
