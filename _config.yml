@@ -10,7 +10,7 @@ github:  yefim
 
 # Build settings
 plugins:
-  - octopress-autoprefixer
+  - jekyll-autoprefixer
   - jekyll-sitemap
 markdown: kramdown
 exclude:
