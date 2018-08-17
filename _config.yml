@@ -5,8 +5,8 @@ email: hi@yef.im
 description: >
   This is the place where I gather my scrambled thoughts into words.
 url: "https://www.yef.im"
-twitter: yefim
-github:  yefim
+twitter_username: yefim
+github_username:  yefim
 
 # Build settings
 plugins:
