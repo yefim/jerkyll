@@ -7,6 +7,7 @@ description: >
 url: "https://yef.im"
 twitter_username: yefim
 github_username:  yefim
+permalink: /:title
 
 # Build settings
 plugins:
