@@ -38,7 +38,7 @@ This recipe is transcribed from [this Russian post](https://www.instagram.com/p/
 1. Cook mushrooms and onion until onion is soft and the mushroom water is boiled out
 1. Mushroom pan and potato pot should finish around the same time
 1. Now we blend
-1. Drain out 50-75% of the water from the potato pot into a container (useful if you need to add more). It's always better to drain more than to have very soppy soup.
+1. Drain out 50-75% of the water from the potato pot into a container (useful if you need to add more). It's always better to drain more than to have very soggy soup.
 1. Mash the potatoes a bit to make them easier to blend
 1. Add in cooked mushrooms
 1. Blend with hand blender until smooth adding in more potato water (aka broth) as needed
