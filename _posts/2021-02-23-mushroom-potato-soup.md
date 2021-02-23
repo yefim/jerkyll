@@ -9,7 +9,7 @@ Makes 4 servings.
 
 ## Preface
 
-This recipe is transcribed from [this Russian post](https://www.instagram.com/p/CI2QglmAI3T/). The soup is all about combining the 2 flavors of mushroom and potato. There will be 2 pots to keep track of: the potato pot and the mushroom pan. In the end, they will merge and be blended together into amazing goodness. The water you boil the potatoes in becomes the broth. The list of ingredients is what I used/transcribed and isn't strict. Essentially you wants 4 servings of potatoes combined with 4 servings of mushrooms.
+This recipe is transcribed from [this Russian post](https://www.instagram.com/p/CI2QglmAI3T/). The soup is all about combining the flavors of mushroom and potato. There will be 2 pots to keep track of: the potato pot and the mushroom pan. In the end, they will merge and be blended together into amazing goodness. The water you boil the potatoes in becomes the broth. The list of ingredients is what I used/transcribed and isn't strict. Essentially you wants 4 servings of potatoes combined with 4 servings of mushrooms.
 
 ## Ingredients
 
