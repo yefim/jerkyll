@@ -9,7 +9,7 @@ Makes 4 servings.
 
 ## Preface
 
-This recipe is transcribed from [this Russian post](https://www.instagram.com/p/CI2QglmAI3T/). The soup is all about combining the flavors of mushroom and potato. There will be 2 pots to keep track of: the potato pot and the mushroom pan. In the end, they will merge and be blended together into amazing goodness. The water you boil the potatoes in becomes the broth. The list of ingredients is what I used/transcribed and isn't strict. Essentially you wants 4 servings of potatoes combined with 4 servings of mushrooms.
+This recipe is transcribed from [this Russian Instagram post](https://www.instagram.com/p/CI2QglmAI3T/). The soup is all about combining the flavors of mushroom and potato. There will be 2 pots to keep track of: the potato pot and the mushroom pan. In the end, they will merge and be blended together into amazing goodness. The water you boil the potatoes in becomes the broth. The list of ingredients is what I used/transcribed and isn't strict. Essentially you wants 4 servings of potatoes combined with 4 servings of mushrooms.
 
 ## Ingredients
 
@@ -24,22 +24,22 @@ This recipe is transcribed from [this Russian post](https://www.instagram.com/p/
 
 ## Instructions
 
-1. Wash & chop the potatoes into fourths
-1. Put them in a pot and cover with water
-1. Put pot to boil on the stove (high heat)
-1. Add bay leaves, garlic cloves, salt, nutritional yeast, and olive oil to water
-1. Once pot is boiling, reduce heat to simmer and let simmer for 15-20 minutes until potatoes are soft enough to blend
-1. Wash and chop the mushrooms
-1. Heat some oil on a pan (medium heat)
-1. Toss chopped mushrooms on
+1. Wash & chop the potatoes into fourths.
+1. Put them in a pot and cover with water.
+1. Bring pot to a boil on the stove (high heat).
+1. Add bay leaves, garlic cloves, salt, nutritional yeast, and olive oil to water.
+1. Once pot is boiling, reduce heat to simmer and let simmer for 15-20 minutes until potatoes are soft enough to blend.
+1. Wash and chop the mushrooms.
+1. Heat some oil on a pan (medium heat).
+1. Toss chopped mushrooms on the pan.
 1. Salt mushrooms immediately and cook for a few min, stirring occassionally. Water will come out of the mushrooms.
-1. Dice the onion
-1. Wait until the mushroom water starts boiling/shrinking then throw in onion
-1. Cook mushrooms and onion until onion is soft and the mushroom water is boiled out
-1. Mushroom pan and potato pot should finish around the same time (the 15-20 minutes mentioned earlier)
-1. Now we blend
-1. Drain out 50-75% of the water from the potato pot into a container (useful if you need to add more). It's always better to drain more than to have very soggy soup.
-1. Mash the potatoes a bit to make them easier to blend
-1. Add cooked mushrooms to potato pot
-1. Blend with hand blender until smooth. Add in more potato water (aka broth) if needed
+1. Dice the onion.
+1. Wait until the mushroom water starts boiling/shrinking then throw in diced onion.
+1. Cook mushrooms and onion until onion is soft and the mushroom water is boiled out (10-15 minutes). Increase heat if you need to.
+1. Mushroom pan and potato pot should finish around the same time.
+1. Now we blend.
+1. Drain out 50-75% of the water from the potato pot into a container (useful if you need to add more). It's always better to drain more than to have soup that's too soggy.
+1. Mash the potatoes a bit to make them easier to blend.
+1. Add cooked mushrooms to potato pot.
+1. Blend with hand blender until smooth. Add in more potato water (aka broth) if needed.
 1. Add some washed parsley or cilantro to complete the soup. Enjoy!
