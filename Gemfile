@@ -5,4 +5,5 @@ gem "jekyll"
 
 gem "yefeme"
 gem "jekyll-sitemap"
-gem 'kramdown-parser-gfm'
+gem "jekyll-feed"
+gem "kramdown-parser-gfm"

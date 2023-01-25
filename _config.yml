@@ -12,6 +12,7 @@ permalink: /:title
 # Build settings
 plugins:
   - jekyll-sitemap
+  - jekyll-feed
 markdown: kramdown
 exclude:
   - Gemfile
