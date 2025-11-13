@@ -71,32 +71,48 @@ layout: default
     padding: 8px 0;
   }
 
+  /* Shared size token for thumbs */
+  :root {
+    --thumb-h: 120px;
+  }
+
+  /* Row of thumbs */
   .thumbs {
     display: flex;
     gap: 6px;
+    width: 100%;
+    align-items: center;
   }
 
-  .thumb {
-    height: 120px;
+  /* First three thumbs: fixed height, natural width */
+  .thumbs img.thumb {
+    height: var(--thumb-h);
     width: auto;
     border-radius: 4px;
     background: #eee;
+    flex: 0 0 auto;       /* don’t grow, don’t shrink */
   }
 
-  /* The “+X” tile container */
-  .more-thumb {
+  /* 4th “+X” tile wrapper */
+  .thumb.more-thumb {
     position: relative;
     overflow: hidden;
     border-radius: 4px;
+
+    flex: 1 1 auto;       /* grows to fill remaining width on desktop */
+    height: var(--thumb-h);
+    min-width: var(--thumb-h);  /* don’t get narrower than a thumb is tall */
   }
 
-  /* Keep natural aspect ratio for the blurred tile */
-  .more-thumb img {
-    height: 120px;
-    width: auto;
-    filter: blur(3px) brightness(0.5);
+  /* Image inside 4th tile: fills that box */
+  .thumb.more-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(2px) brightness(0.5);
   }
 
+  /* Centered “+X” label */
   .more-overlay {
     position: absolute;
     inset: 0;
@@ -106,6 +122,25 @@ layout: default
     font-weight: 600;
     font-size: 1rem;
     color: white;
+  }
+
+  /* MOBILE / TABLET: horizontal scroll instead of squish */
+  @media (max-width: 800px) {
+    .thumbs {
+      overflow-x: auto;
+      flex-wrap: nowrap;          /* keep them in a single row */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* (Optional) make them a bit bigger on mobile */
+    :root {
+      --thumb-h: 144px;
+    }
+
+    /* hide scrollbar if you want it cleaner */
+    .thumbs::-webkit-scrollbar {
+      display: none;
+    }
   }
 </style>
 
