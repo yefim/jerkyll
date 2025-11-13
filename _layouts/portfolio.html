@@ -125,8 +125,12 @@ layout: default
   }
 
   /* MOBILE / TABLET: horizontal scroll instead of squish */
-  @media (max-width: 800px) {
+  @media (max-width: 700px) {
     .thumbs {
+      margin: 0 -16px;
+      padding: 0 16px;
+      width: 100vw;
+
       overflow-x: auto;
       flex-wrap: nowrap;          /* keep them in a single row */
       -webkit-overflow-scrolling: touch;
