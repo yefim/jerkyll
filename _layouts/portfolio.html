@@ -11,22 +11,101 @@ layout: default
   </div>
 </header>
 <main class="portfolio-index">
-  <ul class="date-list">
-    {%- assign shoots_sorted = site.shoots | sort: "name" | reverse -%}
-    {%- for shoot in shoots_sorted -%}
-      <li>
-        <a href="{{ shoot.url | relative_url }}">
-          {{ shoot.name | date: "%Y-%m-%d" }}
-          <span class="count">({{ shoot.images | size }})</span>
+  <ul class="shoot-list">
+    {% assign shoots_sorted = site.shoots | sort: "name" | reverse %}
+    {% for shoot in shoots_sorted %}
+      <li class="shoot-item">
+        <a class="shoot-block" href="{{ shoot.url | relative_url }}">
+          <h2>{{ shoot.name | date: "%b %-d, %Y" }}</h2>
+          <div class="thumbs">
+            {% assign total = shoot.images | size %}
+            
+            {% for id in shoot.images limit:3 %}
+              {% assign base = "https://imagedelivery.net/" | append: site.cf_images_account_hash | append: "/" | append: id | append: "/" %}
+              <img
+                class="thumb"
+                src="{{ base }}{{ site.cf_images_variants.thumb }}"
+                loading="lazy"
+                alt="Preview image from {{ shoot.name }}"
+              >
+            {% endfor %}
+
+            {% if total > 3 %}
+              {% assign fourth_id = shoot.images[3] %}
+              {% assign base2 = "https://imagedelivery.net/" | append: site.cf_images_account_hash | append: "/" | append: fourth_id | append: "/" %}
+              
+              <div class="thumb more-thumb">
+                <img
+                  src="{{ base2 }}{{ site.cf_images_variants.thumb }}"
+                  alt=""
+                  loading="lazy"
+                >
+                <div class="more-overlay">
+                  +{{ total | minus: 3 }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
         </a>
       </li>
-    {%- endfor -%}
+    {% endfor %}
   </ul>
 </main>
 
 <style>
-  .date-list { list-style: none; padding: 0; margin: 1rem 0; }
-  .date-list li { margin: 0.3rem 0; }
-  .date-list a { text-decoration: none; }
-  .date-list .count { opacity: 0.7; margin-left: .4rem; }
+  .shoot-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+  }
+
+  .shoot-item {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Whole block clickable */
+  .shoot-block {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 8px 0;
+  }
+
+  .thumbs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .thumb {
+    height: 120px;
+    width: auto;
+    border-radius: 4px;
+    background: #eee;
+  }
+
+  /* The “+X” tile container */
+  .more-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* Keep natural aspect ratio for the blurred tile */
+  .more-thumb img {
+    height: 120px;
+    width: auto;
+    filter: blur(3px) brightness(0.5);
+  }
+
+  .more-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+  }
 </style>
+
