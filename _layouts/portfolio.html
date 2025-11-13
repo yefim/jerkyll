@@ -16,7 +16,7 @@ layout: default
     {% for shoot in shoots_sorted %}
       <li class="shoot-item">
         <a class="shoot-block" href="{{ shoot.url | relative_url }}">
-          <h2>{{ shoot.name | date: "%b %-d, %Y" }}</h2>
+          <h2>{{ shoot.name | date: "%Y-%m-%d" }}</h2>
           <div class="thumbs">
             {% assign total = shoot.images | size %}
             
