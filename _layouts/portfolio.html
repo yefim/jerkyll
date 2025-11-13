@@ -1,0 +1,25 @@
+---
+layout: default
+---
+
+<main class="portfolio-index">
+  <h1>Portfolio</h1>
+  <ul class="date-list">
+    {%- assign shoots_sorted = site.shoots | sort: "name" | reverse -%}
+    {%- for shoot in shoots_sorted -%}
+      <li>
+        <a href="{{ shoot.url | relative_url }}">
+          {{ shoot.name | date: "%Y-%m-%d" }}
+          <span class="count">({{ shoot.images | size }})</span>
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</main>
+
+<style>
+  .date-list { list-style: none; padding: 0; margin: 1rem 0; }
+  .date-list li { margin: 0.3rem 0; }
+  .date-list a { text-decoration: none; }
+  .date-list .count { opacity: 0.7; margin-left: .4rem; }
+</style>

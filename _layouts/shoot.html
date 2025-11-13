@@ -1,0 +1,64 @@
+---
+layout: default
+---
+
+<main class="portfolio-day">
+  <a class="back accent" href="{{ '/portfolio' | relative_url }}">
+    ~ back to portfolio
+  </a>
+
+  <h1>{{ page.title | escape }}</h1>
+
+  {% assign thumb = site.cf_images_variants.thumb %}
+  {% assign xl = site.cf_images_variants.xl %}
+
+  <div class="grid">
+    {% for id in page.images %}
+    {% assign base = "https://imagedelivery.net/" | append: site.cf_images_account_hash | append: "/" | append: id | append: "/" %}
+    <a class="tile" href="{{ base }}{{ xl }}" target="_blank" rel="noopener">
+      <img
+          src="{{ base }}{{ thumb }}"
+          loading="lazy"
+          decoding="async"
+          alt="Photo from {{ page.title }}"
+          >
+    </a>
+      {% endfor %}
+  </div>
+</main>
+
+<style>
+  .portfolio-day .grid {
+    column-count: 3;
+    column-gap: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .portfolio-day .grid {
+      column-count: 2;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .portfolio-day .grid {
+      column-count: 1;
+    }
+  }
+
+  .portfolio-day .tile {
+    display: block;
+    margin-bottom: 12px;
+    break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    background: #f6f6f6;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .portfolio-day img {
+    display: block;
+    width: 100%;
+    height: auto;          /* let vertical shots be tall */
+  }
+</style>

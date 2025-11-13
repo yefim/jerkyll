@@ -8,6 +8,14 @@ url: "https://yef.im"
 twitter_username: yefim
 github_username:  yefim
 permalink: /:title
+cf_images_account_hash: xi1VyDMD-A_pDPckxeHwDA
+cf_images_variants:
+  thumb: thumb
+  xl: xl
+collections:
+  shoots:
+    output: true
+    permalink: /portfolio/:name
 
 # Build settings
 plugins:
