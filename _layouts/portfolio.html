@@ -2,8 +2,15 @@
 layout: default
 ---
 
+<header>
+  <div class="logo logo-closer-to-top-on-mobile">
+    {% include logo.svg width=103 height=136 %}
+    <div class="under under-large">
+      <h1><em>Portfolio</em></h1>
+    </div>
+  </div>
+</header>
 <main class="portfolio-index">
-  <h1>Portfolio</h1>
   <ul class="date-list">
     {%- assign shoots_sorted = site.shoots | sort: "name" | reverse -%}
     {%- for shoot in shoots_sorted -%}
