@@ -6,7 +6,7 @@ description: >
   This is the place where I gather my scrambled thoughts into words.
 url: "https://yef.im"
 twitter_username: yefim
-github_username:  yefim
+github_username: yefim
 permalink: /:title
 cf_images_account_hash: xi1VyDMD-A_pDPckxeHwDA
 cf_images_variants:
@@ -22,6 +22,9 @@ plugins:
   - jekyll-sitemap
   - jekyll-feed
 markdown: kramdown
+feed:
+  collections:
+    - shoots
 exclude:
   - Gemfile
   - Gemfile.lock
