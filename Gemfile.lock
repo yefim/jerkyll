@@ -73,7 +73,7 @@ GEM
       unicode-display_width (>= 1.1.1, < 3)
     unicode-display_width (2.6.0)
     webrick (1.9.1)
-    yefeme (0.8.2)
+    yefeme (0.8.3)
       jekyll (~> 4.1)
 
 PLATFORMS
@@ -85,7 +85,7 @@ DEPENDENCIES
   jekyll-sitemap
   kramdown-parser-gfm
   webrick (~> 1.8)
-  yefeme (~> 0.8.2)
+  yefeme (~> 0.8.3)
 
 RUBY VERSION
    ruby 3.2.9p265
