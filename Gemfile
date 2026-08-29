@@ -3,7 +3,7 @@ ruby '3.2.9'
 
 gem "jekyll"
 
-gem "yefeme", "~> 0.8.4"
+gem "yefeme", "~> 0.8.6"
 gem "jekyll-sitemap"
 gem "jekyll-feed"
 gem "kramdown-parser-gfm"
