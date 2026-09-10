@@ -57,15 +57,9 @@ done
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 HISTORY_FILE="$SCRIPT_DIR/_photo_uploads.json"
-LOCK_DIR="$SCRIPT_DIR/.photo-upload.lock"
-if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-  echo "Error: another photo upload is running. If a run was killed, remove $LOCK_DIR before retrying." >&2
-  exit 1
-fi
 WORK_DIR=""
 cleanup() {
   [[ -z "$WORK_DIR" ]] || rm -rf -- "$WORK_DIR"
-  rmdir "$LOCK_DIR"
 }
 trap cleanup EXIT
 trap 'exit 130' INT
