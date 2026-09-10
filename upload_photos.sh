@@ -245,19 +245,7 @@ while IFS= read -r -d '' f; do
   doc="$SCRIPT_DIR/_shoots/$DOC_DATE.md"
 
   if [ ! -f "$doc" ]; then
-    {
-      printf '%s\n' '---'
-      SHOOT_DATE="$DOC_DATE" yq --null-input '
-        {
-          "layout": "shoot",
-          "title": strenv(SHOOT_DATE),
-          "date": env(SHOOT_DATE),
-          "images": []
-        }
-      '
-      printf '%s\n' '---'
-    } > "$WORK_DIR/shoot.md"
-    mv "$WORK_DIR/shoot.md" "$doc"
+    printf -- "---\nlayout: shoot\ntitle: %s\ndate: %s\nimages:\n---\n" "$DOC_DATE" "$DOC_DATE" > "$doc"
   fi
 
   update_shoot
