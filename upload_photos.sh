@@ -4,7 +4,7 @@
 #   ./upload_photos.sh <folder> [--date yyyy-mm-dd]
 # Requires: Bash 4+, exiftool, fd, jq, yq (Mike Farah v4), shasum,
 # ImageMagick (magick), awk.
-# Commit _photo_uploads.json alongside your shoots to retain upload history.
+# Commit _photo_uploads.yml alongside your shoots to retain upload history.
 
 set -euo pipefail
 
@@ -56,7 +56,7 @@ for dependency in exiftool fd jq yq shasum magick awk; do
 done
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
-HISTORY_FILE="$SCRIPT_DIR/_photo_uploads.json"
+HISTORY_FILE="$SCRIPT_DIR/_photo_uploads.yml"
 WORK_DIR=""
 cleanup() {
   [[ -z "$WORK_DIR" ]] || rm -rf -- "$WORK_DIR"
@@ -67,7 +67,7 @@ trap 'exit 143' TERM
 # Use the repo's filesystem so mv replaces history and shoot files atomically.
 WORK_DIR=$(mktemp -d "$SCRIPT_DIR/.photo-upload.XXXXXX")
 [[ -f "$HISTORY_FILE" ]] || printf '{}\n' > "$HISTORY_FILE"
-jq -e 'type == "object"' "$HISTORY_FILE" >/dev/null
+yq -e 'tag == "!!map"' "$HISTORY_FILE" >/dev/null
 
 calculate_metadata() {
   local photo="$1" dimensions width height hash
@@ -136,14 +136,14 @@ calculate_metadata() {
       }
       print hash
     }') || return
-  jq -n --argjson width "$width" --argjson height "$height" --arg blurhash "$hash" \
-    '{width: $width, height: $height, blurhash: $blurhash}'
+  PHOTO_WIDTH="$width" PHOTO_HEIGHT="$height" PHOTO_BLURHASH="$hash" yq --null-input \
+    '{"width": env(PHOTO_WIDTH), "height": env(PHOTO_HEIGHT), "blurhash": strenv(PHOTO_BLURHASH)}'
 }
 
 save_upload() {
-  jq --arg fingerprint "$fingerprint" --argjson entry "$entry" \
-    '.[$fingerprint] = $entry' "$HISTORY_FILE" > "$WORK_DIR/history.json"
-  mv "$WORK_DIR/history.json" "$HISTORY_FILE"
+  PHOTO_CHECKSUM="$fingerprint" PHOTO_ENTRY="$entry" yq \
+    '.[strenv(PHOTO_CHECKSUM)] = env(PHOTO_ENTRY)' "$HISTORY_FILE" > "$WORK_DIR/history.yml"
+  mv "$WORK_DIR/history.yml" "$HISTORY_FILE"
 }
 
 update_shoot() {
@@ -151,7 +151,7 @@ update_shoot() {
   # Front-matter mode preserves the Markdown body; merge keeps custom captions.
   PHOTO_ENTRY="$entry" yq --exit-status --front-matter=process '
     select(tag == "!!map" and (.images == null or (.images | tag) == "!!seq")) |
-    (env(PHOTO_ENTRY) | ... style = "") as $photo |
+    env(PHOTO_ENTRY) as $photo |
     .images = (.images // []) |
     (.images[] | select(. == $photo.id)) = $photo |
     (.images[] | select(.id == $photo.id)) *= $photo |
@@ -203,15 +203,15 @@ while IFS= read -r -d '' f; do
 
   fingerprint=$(shasum -a 256 < "$f")
   fingerprint="${fingerprint%% *}"
-  entry=$(jq -c --arg fingerprint "$fingerprint" '.[$fingerprint]' "$HISTORY_FILE")
-  if jq -e --arg fingerprint "$fingerprint" 'has($fingerprint)' "$HISTORY_FILE" >/dev/null; then
-    jq -e 'type == "object" and (.id | type == "string" and length > 0)' <<< "$entry" >/dev/null
+  entry=$(PHOTO_CHECKSUM="$fingerprint" yq '.[strenv(PHOTO_CHECKSUM)]' "$HISTORY_FILE")
+  if PHOTO_CHECKSUM="$fingerprint" yq -e 'has(strenv(PHOTO_CHECKSUM))' "$HISTORY_FILE" >/dev/null 2>&1; then
+    yq -e 'tag == "!!map" and (.id | tag == "!!str" and length > 0)' <<< "$entry" >/dev/null
     echo "Reusing $f (date: $ymd)…"
-    if ! jq -e '(.width | type == "number" and . > 0) and
-                (.height | type == "number" and . > 0) and
-                (.blurhash | type == "string" and length == 28)' <<< "$entry" >/dev/null; then
+    if ! yq -e '(.width | tag == "!!int" and . > 0) and
+                (.height | tag == "!!int" and . > 0) and
+                (.blurhash | tag == "!!str" and length == 28)' <<< "$entry" >/dev/null 2>&1; then
       metadata=$(calculate_metadata "$f")
-      entry=$(jq --argjson metadata "$metadata" '. + $metadata' <<< "$entry")
+      entry=$(PHOTO_METADATA="$metadata" yq '. * env(PHOTO_METADATA)' <<< "$entry")
       save_upload
     fi
   else
@@ -227,7 +227,7 @@ while IFS= read -r -d '' f; do
       -F "file=@\"${form_path}\"" \
       "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/images/v1" \
       | jq -er 'select(.success == true) | .result.id | select(type == "string" and length > 0)')
-    entry=$(jq --arg id "$id" '{id: $id} + .' <<< "$metadata")
+    entry=$(PHOTO_ID="$id" yq '{"id": strenv(PHOTO_ID)} * .' <<< "$metadata")
     # Save each confirmed upload before the shoot, so a failed edit is retryable.
     save_upload
     uploaded=$((uploaded + 1))
