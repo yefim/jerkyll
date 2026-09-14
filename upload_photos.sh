@@ -2,7 +2,7 @@
 
 # Usage:
 #   ./upload_photos.sh <folder> [--date yyyy-mm-dd]
-# Requires: Bash 4+, exiftool, fd, jq, yq (Mike Farah v4), shasum,
+# Requires: Bash, exiftool, jq, yq (Mike Farah v4), shasum,
 # ImageMagick (magick), awk.
 # Commit _photo_uploads.yml alongside your shoots to retain upload history.
 
@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-for dependency in exiftool fd jq yq shasum magick awk; do
+for dependency in exiftool jq yq shasum magick awk; do
   if ! command -v "$dependency" >/dev/null 2>&1; then
     echo "Error: required command not found: $dependency" >&2
     exit 1
@@ -147,51 +147,40 @@ save_upload() {
 }
 
 update_shoot() {
-  # Upgrade matching scalar IDs, merge metadata in place, or prepend a new image.
+  # Merge metadata in place or prepend a new image.
   # Front-matter mode preserves the Markdown body; merge keeps custom captions.
   PHOTO_ENTRY="$entry" yq --exit-status --front-matter=process '
     select(tag == "!!map" and (.images == null or (.images | tag) == "!!seq")) |
     env(PHOTO_ENTRY) as $photo |
     .images = (.images // []) |
-    (.images[] | select(. == $photo.id)) = $photo |
     (.images[] | select(.id == $photo.id)) *= $photo |
     with(select([.images[] | select(.id == $photo.id)] | length == 0);
       .images = [$photo] + .images
     )
   ' "$doc" > "$WORK_DIR/shoot.md"
-  if ! cmp -s "$doc" "$WORK_DIR/shoot.md"; then
-    mv "$WORK_DIR/shoot.md" "$doc"
-  fi
+  mv "$WORK_DIR/shoot.md" "$doc"
 }
 
 # -----------------------------
-# 1. Build map: filepath → YYYY-MM-DD
-#    using *one* exiftool call
+# 1. Read file paths and dates using one exiftool call
 # -----------------------------
-
-declare -A FILE_DATES
 
 exiftool -fast -json -DateTimeOriginal -d '%Y-%m-%d' -r \
   -ext jpg -ext jpeg -ext png -ext heic "$DIR" > "$WORK_DIR/exif.json"
+: > "$WORK_DIR/dates"
 if [[ -s "$WORK_DIR/exif.json" ]]; then
   jq -j '.[] | .SourceFile, "\u0000", (.DateTimeOriginal // ""), "\u0000"' \
     "$WORK_DIR/exif.json" > "$WORK_DIR/dates"
-  while IFS= read -r -d '' path && IFS= read -r -d '' ymd; do
-    [[ "$ymd" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] && FILE_DATES["$path"]="$ymd"
-  done < "$WORK_DIR/dates"
 fi
 
 # -----------------------------
 # 2. Iterate files (skip if no EXIF date)
 # -----------------------------
 
-fd -0 --type f --absolute-path -e jpg -e jpeg -e png -e heic . "$DIR" > "$WORK_DIR/files"
 uploaded=0
-while IFS= read -r -d '' f; do
-  ymd="${FILE_DATES["$f"]:-}"
-
+while IFS= read -r -d '' f && IFS= read -r -d '' ymd; do
   # Skip files with no EXIF date
-  if [[ -z "$ymd" ]]; then
+  if [[ ! "$ymd" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
     echo "Skipping $f (no EXIF date)"
     continue
   fi
@@ -205,15 +194,11 @@ while IFS= read -r -d '' f; do
   fingerprint="${fingerprint%% *}"
   entry=$(PHOTO_CHECKSUM="$fingerprint" yq '.[strenv(PHOTO_CHECKSUM)]' "$HISTORY_FILE")
   if PHOTO_CHECKSUM="$fingerprint" yq -e 'has(strenv(PHOTO_CHECKSUM))' "$HISTORY_FILE" >/dev/null 2>&1; then
-    yq -e 'tag == "!!map" and (.id | tag == "!!str" and length > 0)' <<< "$entry" >/dev/null
+    yq -e 'tag == "!!map" and (.id | tag) == "!!str" and (.id | length) > 0 and
+           (.width | tag) == "!!int" and .width > 0 and
+           (.height | tag) == "!!int" and .height > 0 and
+           (.blurhash | tag) == "!!str" and (.blurhash | length) == 28' <<< "$entry" >/dev/null
     echo "Reusing $f (date: $ymd)…"
-    if ! yq -e '(.width | tag == "!!int" and . > 0) and
-                (.height | tag == "!!int" and . > 0) and
-                (.blurhash | tag == "!!str" and length == 28)' <<< "$entry" >/dev/null 2>&1; then
-      metadata=$(calculate_metadata "$f")
-      entry=$(PHOTO_METADATA="$metadata" yq '. * env(PHOTO_METADATA)' <<< "$entry")
-      save_upload
-    fi
   else
     : "${CF_API_TOKEN:?Set CF_API_TOKEN before uploading new photos}"
     : "${CF_ACCOUNT_ID:?Set CF_ACCOUNT_ID before uploading new photos}"
@@ -235,14 +220,13 @@ while IFS= read -r -d '' f; do
 
   mkdir -p "$SCRIPT_DIR/_shoots"
 
-  DOC_DATE="${TARGET_DATE:-$ymd}"
-  doc="$SCRIPT_DIR/_shoots/$DOC_DATE.md"
+  doc="$SCRIPT_DIR/_shoots/$ymd.md"
 
   if [ ! -f "$doc" ]; then
-    printf -- "---\nlayout: shoot\ntitle: %s\ndate: %s\nimages:\n---\n" "$DOC_DATE" "$DOC_DATE" > "$doc"
+    printf -- "---\nlayout: shoot\ntitle: %s\ndate: %s\nimages:\n---\n" "$ymd" "$ymd" > "$doc"
   fi
 
   update_shoot
-done < "$WORK_DIR/files"
+done < "$WORK_DIR/dates"
 
 echo "Done: $uploaded uploaded."
