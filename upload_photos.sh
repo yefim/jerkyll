@@ -57,15 +57,11 @@ done
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 HISTORY_FILE="$SCRIPT_DIR/_photo_uploads.yml"
-WORK_DIR=""
-cleanup() {
-  [[ -z "$WORK_DIR" ]] || rm -rf -- "$WORK_DIR"
-}
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
 # Use the repo's filesystem so mv replaces history and shoot files atomically.
 WORK_DIR=$(mktemp -d "$SCRIPT_DIR/.photo-upload.XXXXXX")
+trap 'rm -rf -- "$WORK_DIR"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 [[ -f "$HISTORY_FILE" ]] || printf '{}\n' > "$HISTORY_FILE"
 yq -e 'tag == "!!map"' "$HISTORY_FILE" >/dev/null
 
@@ -145,12 +141,9 @@ calculate_metadata() {
 # -----------------------------
 
 exiftool -fast -json -DateTimeOriginal -d '%Y-%m-%d' -r \
-  -ext jpg -ext jpeg -ext png -ext heic "$DIR" > "$WORK_DIR/exif.json"
-: > "$WORK_DIR/dates"
-if [[ -s "$WORK_DIR/exif.json" ]]; then
+  -ext jpg -ext jpeg -ext png -ext heic "$DIR" |
   jq -j '.[] | .SourceFile, "\u0000", (.DateTimeOriginal // ""), "\u0000"' \
-    "$WORK_DIR/exif.json" > "$WORK_DIR/dates"
-fi
+    > "$WORK_DIR/dates"
 
 # -----------------------------
 # 2. Iterate files (skip if no EXIF date)
