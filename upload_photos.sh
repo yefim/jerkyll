@@ -140,27 +140,6 @@ calculate_metadata() {
     '{"width": env(PHOTO_WIDTH), "height": env(PHOTO_HEIGHT), "blurhash": strenv(PHOTO_BLURHASH)}'
 }
 
-save_upload() {
-  PHOTO_CHECKSUM="$fingerprint" PHOTO_ENTRY="$entry" yq \
-    '.[strenv(PHOTO_CHECKSUM)] = env(PHOTO_ENTRY)' "$HISTORY_FILE" > "$WORK_DIR/history.yml"
-  mv "$WORK_DIR/history.yml" "$HISTORY_FILE"
-}
-
-update_shoot() {
-  # Merge metadata in place or prepend a new image.
-  # Front-matter mode preserves the Markdown body; merge keeps custom captions.
-  PHOTO_ENTRY="$entry" yq --exit-status --front-matter=process '
-    select(tag == "!!map" and (.images == null or (.images | tag) == "!!seq")) |
-    env(PHOTO_ENTRY) as $photo |
-    .images = (.images // []) |
-    (.images[] | select(.id == $photo.id)) *= $photo |
-    with(select([.images[] | select(.id == $photo.id)] | length == 0);
-      .images = [$photo] + .images
-    )
-  ' "$doc" > "$WORK_DIR/shoot.md"
-  mv "$WORK_DIR/shoot.md" "$doc"
-}
-
 # -----------------------------
 # 1. Read file paths and dates using one exiftool call
 # -----------------------------
@@ -214,7 +193,9 @@ while IFS= read -r -d '' f && IFS= read -r -d '' ymd; do
       | jq -er 'select(.success == true) | .result.id | select(type == "string" and length > 0)')
     entry=$(PHOTO_ID="$id" yq '{"id": strenv(PHOTO_ID)} * .' <<< "$metadata")
     # Save each confirmed upload before the shoot, so a failed edit is retryable.
-    save_upload
+    PHOTO_CHECKSUM="$fingerprint" PHOTO_ENTRY="$entry" yq \
+      '.[strenv(PHOTO_CHECKSUM)] = env(PHOTO_ENTRY)' "$HISTORY_FILE" > "$WORK_DIR/history.yml"
+    mv "$WORK_DIR/history.yml" "$HISTORY_FILE"
     uploaded=$((uploaded + 1))
   fi
 
@@ -226,7 +207,18 @@ while IFS= read -r -d '' f && IFS= read -r -d '' ymd; do
     printf -- "---\nlayout: shoot\ntitle: %s\ndate: %s\nimages:\n---\n" "$ymd" "$ymd" > "$doc"
   fi
 
-  update_shoot
+  # Merge metadata in place or prepend a new image.
+  # Front-matter mode preserves the Markdown body; merge keeps custom captions.
+  PHOTO_ENTRY="$entry" yq --exit-status --front-matter=process '
+    select(tag == "!!map" and (.images == null or (.images | tag) == "!!seq")) |
+    env(PHOTO_ENTRY) as $photo |
+    .images = (.images // []) |
+    (.images[] | select(.id == $photo.id)) *= $photo |
+    with(select([.images[] | select(.id == $photo.id)] | length == 0);
+      .images = [$photo] + .images
+    )
+  ' "$doc" > "$WORK_DIR/shoot.md"
+  mv "$WORK_DIR/shoot.md" "$doc"
 done < "$WORK_DIR/dates"
 
 echo "Done: $uploaded uploaded."
